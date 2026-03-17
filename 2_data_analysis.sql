@@ -35,11 +35,37 @@ JOIN Orders o ON c.customer_id = o.customer_id
 GROUP BY c.customer_id, c.name
 ORDER BY total_spent DESC;
 
+-- task 3: identif the top selling product in each category
 
+-- create a temporary table (CTE) to get total sales for each product
+WITH ProductSales AS (
+	SELECT
+  		p.category,
+  		p.product_name,
+  		SUM(oi.quantity) as total_sold
+  	FROM Order_Items oi
+  	JOIN Products p ON oi.product_id = p.product_id
+  	GROUP BY p.category, p.product_name
+),
 
+-- create a CTE to rank the sales
 
-
-
-
-
-
+RankedSales AS(
+  	SELECT
+  		category,
+  		product_name,
+  		total_sold,
+  		-- use ROW_NUMBER() to get the best (i.e #1)
+  		-- PARTITION BY means restart counting at 1 every category
+  		--ORDER BY total_sold means get the ones with highest ammount first
+  		ROW_NUMBER() OVER(PARTITION BY category ORDER BY total_sold DESC) as rank
+  	FROM ProductSales
+  )
+  
+  -- query the final CTE and get #1s
+  SELECT
+  	category,
+    product_name,
+    total_sold
+ FROM RankedSales
+ WHERE rank = 1;
