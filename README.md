@@ -3,6 +3,10 @@
 ## Project Overview
 This project shows some SQL skills by analyzing an e-commerce database. I generated a simple relational database with four tables (`Customers`, `Orders`, `Products`, `Order_Items`) and wrote queries to extract actionable business insights regarding revenue, product performance, and customer behavior.
 
+## Output sample:
+<img width="1910" height="840" alt="image" src="https://github.com/user-attachments/assets/31fed8e8-e3e9-47db-9e77-c059b68595cc" />
+
+
 ## Tech Stack
 - **Database:** PostgreSQL
 - **Concepts Applied:** Joins, Aggregations, Control Flow (`CASE WHEN`), Window Functions (`ROW_NUMBER()`, `LAG()`), and Common Table Expressions (CTEs).
