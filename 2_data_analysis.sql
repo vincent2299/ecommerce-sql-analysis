@@ -69,3 +69,36 @@ RankedSales AS(
     total_sold
  FROM RankedSales
  WHERE rank = 1;
+ 
+ 
+ -- task 4: calcualte month over month Revenue Growth
+ 
+ -- create a CTE to get revenue per month
+ 
+ WITH MonthlyRevenue AS (
+ 	SELECT
+   		-- DATE_TRUNC groups exact dates into just their months
+   		DATE_TRUNC('month', order_date) AS order_month,
+   		SUM(total_amount) AS revenue
+   	FROM Orders
+   	GROUP BY DATE_TRUNC('month', order_date)
+ )
+ 
+ -- query that CTE and use LAG() to look at past
+ 
+ SELECT
+ 	order_month,
+    revenue,
+    
+    -- get previous months revenue (look at row above by date)
+    LAG(revenue) OVER(ORDER BY order_month) AS previous_month_revenue,
+    
+    -- calcualte growth percentage (New-Old) / Old * 100
+    -- Rounded to nearest 2 decimal
+    ROUND(
+      	(revenue - LAG(revenue) OVER(ORDER BY order_month))
+      	/
+      	LAG(revenue) OVER(ORDER BY order_month) * 100
+     , 2) AS growth_percentage
+ FROM MonthlyRevenue;
+      
